@@ -1,14 +1,14 @@
 "use client";
 
 import { Heart, Minus, Plus, ShoppingBag } from "lucide-react";
-import { useState } from "react";
+import { useDebugValue, useEffect, useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 
 export default function ProductActions({ product, selectedImage }) {
-  const { addToCart } = useCart();
+  const { addToCart, cart } = useCart();
 
-  console.log(product); 
+  console.log("from pA", product)
 
   const {
     toggleWishlist,
@@ -17,6 +17,8 @@ export default function ProductActions({ product, selectedImage }) {
 
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const [productExist, setProductExist] = useState(false);
+
 
 
   const liked = isInWishlist(product._id);
@@ -44,6 +46,17 @@ export default function ProductActions({ product, selectedImage }) {
   };
 
   const isOutOfStock = product.stock <= 0;
+
+  useEffect(() => {
+    if (cart.length >= 0) {
+      for (let i = 0; i < cart.length; i++) {
+        console.log("loop", cart[i]);
+        if (cart[i]._id === product._id) {
+          setProductExist(true);
+        }
+      };
+    }
+  })
 
   return (
     <>
@@ -101,8 +114,8 @@ export default function ProductActions({ product, selectedImage }) {
         <button
           type="button"
           onClick={handleAddToCart}
-          disabled={isOutOfStock}
-          className="
+          disabled={isOutOfStock || productExist}
+          className={`
             flex
             flex-1
             items-center
@@ -118,14 +131,15 @@ export default function ProductActions({ product, selectedImage }) {
             hover:bg-[var(--primary-hover)]
             disabled:cursor-not-allowed
             disabled:opacity-50
-          "
+          `}
         >
           <ShoppingBag size={18} />
 
           {isOutOfStock
             ? "Out of Stock"
             : added
-              ? "Added to Cart"
+              ? "Adding to Cart..."
+              :productExist ? "Added To Cart"
               : "Add to Cart"}
         </button>
 

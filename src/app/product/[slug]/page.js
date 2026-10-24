@@ -7,12 +7,12 @@ import { ArrowLeft, Heart, ShieldCheck, Truck } from "lucide-react";
 import ProductActions from "@/components/Product/ProductActions";
 import axios from "axios";
 
+
 /* =========================================================
 GET PRODUCT
 ========================================================= */
 
 async function getProduct(slug) {
-  console.log(slug);
 
   try {
     const response = await axios.get(`/api/products/slug/${slug}`);
@@ -39,6 +39,7 @@ PRODUCT PAGE
 export default function ProductPage({ params }) {
 const [product, setProduct] = useState(null);
 const [loading, setLoading] = useState(true);
+
 
 // Selected product image
 const [selectedImage, setSelectedImage] = useState(0);

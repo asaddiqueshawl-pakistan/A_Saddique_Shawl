@@ -15,6 +15,8 @@ export default function CartPage() {
     isLoaded,
   } = useCart();
 
+  // console.log(cart)
+
   const delivery = subtotal > 0 ? 250 : 0;
   const total = subtotal + delivery;
 
