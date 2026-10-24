@@ -9,6 +9,7 @@ import {
   FaFacebookF,
   FaInstagram,
   FaXTwitter,
+  FaTiktok 
 } from "react-icons/fa6";
 
 const shopLinks = [
@@ -62,7 +63,7 @@ export default function Footer() {
 
               <div className="flex items-center gap-3 text-sm text-gray-400">
                 <Mail size={17} strokeWidth={1.5} />
-                <span>support@chronova.com</span>
+                <span>asaddique.shawl@gmail.com</span>
               </div>
 
               <div className="flex items-center gap-3 text-sm text-gray-400">
@@ -140,7 +141,7 @@ export default function Footer() {
                   hover:text-black
                 "
               >
-                <FaXTwitter size={17} />
+                <FaTiktok size={17} />
               </a>
 
             </div>
