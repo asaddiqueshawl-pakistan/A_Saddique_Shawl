@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-[var(--background)]">
-      <div className="relative h-[87vh] w-[100vw]">
+      <div className="relative sm:h-[85vh] h-[30vh] w-[100vw]">
         <Image
           src="/banners/a_saddique.jpg"
           alt="Image"
