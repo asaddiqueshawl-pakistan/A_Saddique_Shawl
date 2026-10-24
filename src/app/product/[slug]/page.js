@@ -5,36 +5,31 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Heart, ShieldCheck, Truck } from "lucide-react";
 import ProductActions from "@/components/Product/ProductActions";
+import axios from "axios";
 
 /* =========================================================
 GET PRODUCT
 ========================================================= */
 
 async function getProduct(slug) {
-try {
-const response = await fetch(
-`${
-        process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
-      }/api/products/slug/${slug}`,
-{
-cache: "no-store",
-}
-);
+  console.log(slug);
 
-if (!response.ok) {
-  return null;
-}
+  try {
+    const response = await axios.get(`/api/products/slug/${slug}`);
 
-const data = await response.json();
+    const data = response.data;
 
-console.log(data);
+    console.log(data);
 
-return data.product;
+    return data.product;
+  } catch (error) {
+    console.error(
+      "Product fetch error:",
+      error.response?.data || error.message
+    );
 
-} catch (error) {
-console.error("Product fetch error:", error);
-return null;
-}
+    return null;
+  }
 }
 
 /* =========================================================
