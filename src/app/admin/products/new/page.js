@@ -588,7 +588,7 @@ export default function AddProductPage() {
                   {/* Movement */}
                   <div>
                     <label className="mb-2 block text-sm font-medium">
-                      Movement
+                      Made By
                     </label>
 
                     <input
@@ -608,7 +608,7 @@ export default function AddProductPage() {
                   {/* Case Material */}
                   <div>
                     <label className="mb-2 block text-sm font-medium">
-                      Case Material
+                      Wool Type
                     </label>
 
                     <input
@@ -628,7 +628,7 @@ export default function AddProductPage() {
                   {/* Strap Material */}
                   <div>
                     <label className="mb-2 block text-sm font-medium">
-                      Strap Material
+                      Gurantee
                     </label>
 
                     <input
@@ -648,7 +648,7 @@ export default function AddProductPage() {
                   {/* Dial Color */}
                   <div>
                     <label className="mb-2 block text-sm font-medium">
-                      Dial Color
+                      Color
                     </label>
 
                     <input
@@ -668,7 +668,7 @@ export default function AddProductPage() {
                   {/* Water Resistance */}
                   <div>
                     <label className="mb-2 block text-sm font-medium">
-                      Water Resistance
+                      Weight
                     </label>
 
                     <input

@@ -455,11 +455,11 @@ return ( <main className="min-h-screen bg-[var(--background)]">
         <div className="mt-7 grid border-l border-t border-[var(--border)] sm:grid-cols-2 lg:grid-cols-3">
 
           {[
-            ["Movement", product.specifications?.movement],
-            ["Case Material", product.specifications?.caseMaterial],
-            ["Strap Material", product.specifications?.strapMaterial],
-            ["Dial Color", product.specifications?.dialColor],
-            ["Water Resistance", product.specifications?.waterResistance],
+            ["Made By", product.specifications?.movement],
+            ["Wool Type", product.specifications?.caseMaterial],
+            ["Gurantee", product.specifications?.strapMaterial],
+            ["Color", product.specifications?.dialColor],
+            ["Weight", product.specifications?.waterResistance],
             ["Warranty", product.specifications?.warranty],
           ].map(([label, value]) => (
 

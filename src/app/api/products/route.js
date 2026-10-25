@@ -167,7 +167,6 @@ export async function POST(request) {
     // Images
     const imageFiles = formData.getAll("images");
 
-
     const imagesUrls = [];
 
     const uploadDir = path.join(os.tmpdir(), "uploads");
@@ -220,7 +219,7 @@ export async function POST(request) {
 
     }
 
-    console.log("This is from imageUrls = ", imagesUrls);
+    // console.log("This is from imageUrls = ", imagesUrls);
       
 
       // Basic validation
