@@ -61,10 +61,10 @@ export default function ProductActions({ product, selectedImage }) {
   return (
     <>
       {/* Quantity + Cart */}
-      <div className="mt-7 flex gap-3">
+      <div className="mt-7 sm:flex gap-3">
 
         {/* Quantity */}
-        <div className="flex h-14 border border-[var(--border)]">
+        <div className="flex mb-5 sm:mb-0 justify-around h-14 border border-[var(--border)]">
 
           <button
             type="button"
@@ -72,7 +72,8 @@ export default function ProductActions({ product, selectedImage }) {
             disabled={quantity <= 1 || isOutOfStock}
             className="
               flex
-              w-11
+              w-1/3
+              sm:w-11
               items-center
               justify-center
               text-[var(--text-primary)]
@@ -85,7 +86,7 @@ export default function ProductActions({ product, selectedImage }) {
             <Minus size={16} />
           </button>
 
-          <div className="flex w-10 items-center justify-center border-x border-[var(--border)] text-sm font-medium">
+          <div className="flex w-1/3 sm:w-10 items-center justify-center border-x border-[var(--border)] text-sm font-medium">
             {quantity}
           </div>
 
@@ -95,7 +96,8 @@ export default function ProductActions({ product, selectedImage }) {
             disabled={quantity >= product.stock || isOutOfStock}
             className="
               flex
-              w-11
+              w-1/3
+              sm:w-11
               items-center
               justify-center
               text-[var(--text-primary)]
@@ -109,6 +111,9 @@ export default function ProductActions({ product, selectedImage }) {
           </button>
 
         </div>
+
+
+        <div className=" flex items-center gap-5 w-full">
 
         {/* Add to Cart */}
         <button
@@ -131,6 +136,7 @@ export default function ProductActions({ product, selectedImage }) {
             hover:bg-[var(--primary-hover)]
             disabled:cursor-not-allowed
             disabled:opacity-50
+            w-1/2
           `}
         >
           <ShoppingBag size={18} />
@@ -193,6 +199,8 @@ export default function ProductActions({ product, selectedImage }) {
             fill={liked ? "currentColor" : "none"}
           />
         </button>
+
+        </div>
 
       </div>
     </>
