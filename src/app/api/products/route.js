@@ -215,8 +215,6 @@ export async function POST(request) {
       
       imagesUrls.push(res);
 
-      console.log("this is from response = ",res)
-
     }
 
     // console.log("This is from imageUrls = ", imagesUrls);
