@@ -131,7 +131,7 @@ export default function Navbar() {
         <div className="flex items-center gap-3 sm:gap-4">
 
           {/* Search */}
-          <button
+          {/* <button
             type="button"
             aria-label="Search"
             className="
@@ -144,7 +144,7 @@ export default function Navbar() {
               size={20}
               strokeWidth={1.7}
             />
-          </button>
+          </button> */}
 
           {/* Authentication */}
           {authLoading ? (
