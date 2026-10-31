@@ -1,276 +1,3 @@
-// "use client";
-
-
-// import { useWishlist } from "@/context/WishlistContext";
-// import { useCart } from "@/context/CartContext";
-// import Link from "next/link";
-// import { Menu, Search, ShoppingBag, User, X, Heart } from "lucide-react";
-// import { useState } from "react";
-// import { useAuth } from "@/context/AuthContext";
-
-
-// const navLinks = [
-//   {
-//     label: "Home",
-//     href: "/",
-//   },
-//   {
-//     label: "Shop",
-//     href: "/shop",
-//   },
-//   {
-//     label: "Men",
-//     href: "/shop?category=men",
-//   },
-//   {
-//     label: "Women",
-//     href: "/shop?category=women",
-//   },
-//   {
-//     label: "Luxury",
-//     href: "/shop?category=luxury",
-//   },
-// ];
-
-// export default function Navbar() {
-//   const [menuOpen, setMenuOpen] = useState(false);
-
-//   const { totalItems } = useCart();
-//   const { totalWishlistItems } = useWishlist();
-
-//   const {
-//     user,
-//     loading: authLoading,
-//     logout,
-//     isAuthenticated,
-//   } = useAuth();
-
-//   return (
-//     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--background)]">
-//       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-8">
-
-//         {/* Logo */}
-//         <Link
-//           href="/"
-//           className="text-xl font-bold tracking-[0.25em] text-[var(--text-primary)]"
-//         >
-//           CHRONOVA
-//         </Link>
-
-//         {/* Desktop Navigation */}
-//         <nav className="hidden items-center gap-8 md:flex">
-//           {navLinks.map((link) => (
-//             <Link
-//               key={link.href}
-//               href={link.href}
-//               className="
-//                 relative
-//                 text-sm
-//                 font-medium
-//                 text-[var(--text-primary)]
-//                 transition-colors
-//                 hover:text-[var(--primary-hover)]
-//                 after:absolute
-//                 after:-bottom-2
-//                 after:left-0
-//                 after:h-px
-//                 after:w-0
-//                 after:bg-[var(--primary)]
-//                 after:transition-all
-//                 hover:after:w-full
-//               "
-//             >
-//               {link.label}
-//             </Link>
-//           ))}
-//         </nav>
-
-//         {/* Actions */}
-//         <div className="flex items-center gap-4">
-
-//           {/* Search */}
-//           <button
-//             type="button"
-//             aria-label="Search"
-//             className="
-//               text-[var(--text-primary)]
-//               hover:text-[var(--primary-hover)]
-//             "
-//           >
-//             <Search size={20} strokeWidth={1.7} />
-//           </button>
-
-//           {/* Account */}
-//           <Link
-//             href="/account"
-//             aria-label="Account"
-//             className="
-//               hidden
-//               sm:block
-//               text-[var(--text-primary)]
-//               hover:text-[var(--primary-hover)]
-//             "
-//           >
-//             <User size={20} strokeWidth={1.7} />
-//           </Link>
-
-//           {/* Cart */}
-//           <Link
-//             href="/cart"
-//             aria-label={`Shopping cart with ${totalItems} items`}
-//             className="
-//     relative
-//     flex
-//     h-10
-//     w-10
-//     items-center
-//     justify-center
-//     text-[var(--text-primary)]
-//     transition
-//     hover:text-[var(--primary-hover)]
-//   "
-//           >
-//             <ShoppingBag size={21} strokeWidth={1.7} />
-
-//             {totalItems > 0 && (
-//               <span
-//                 className="
-//         absolute
-//         -right-0.5
-//         -top-0.5
-//         flex
-//         h-5
-//         min-w-5
-//         items-center
-//         justify-center
-//         rounded-full
-//         bg-[var(--primary)]
-//         px-1
-//         text-[10px]
-//         font-bold
-//         leading-none
-//         text-black
-//       "
-//               >
-//                 {totalItems > 99 ? "99+" : totalItems}
-//               </span>
-//             )}
-//           </Link>
-
-//           <Link
-//             href="/wishlist"
-//             aria-label={`Wishlist with ${totalWishlistItems} items`}
-//             className="
-//     relative
-//     flex
-//     h-10
-//     w-10
-//     items-center
-//     justify-center
-//     text-[var(--text-primary)]
-//     transition
-//     hover:text-[var(--primary-hover)]
-//   "
-//           >
-//             <Heart
-//               size={21}
-//               strokeWidth={1.7}
-//             />
-
-//             {totalWishlistItems > 0 && (
-//               <span
-//                 className="
-//         absolute
-//         -right-0.5
-//         -top-0.5
-//         flex
-//         h-5
-//         min-w-5
-//         items-center
-//         justify-center
-//         rounded-full
-//         bg-[var(--primary)]
-//         px-1
-//         text-[10px]
-//         font-bold
-//         leading-none
-//         text-black
-//       "
-//               >
-//                 {totalWishlistItems > 99
-//                   ? "99+"
-//                   : totalWishlistItems}
-//               </span>
-//             )}
-//           </Link>
-
-//           {/* Mobile Menu Button */}
-//           <button
-//             type="button"
-//             aria-label="Toggle menu"
-//             onClick={() => setMenuOpen(!menuOpen)}
-//             className="
-//               text-[var(--text-primary)]
-//               hover:text-[var(--primary-hover)]
-//               md:hidden
-//             "
-//           >
-//             {menuOpen ? (
-//               <X size={23} strokeWidth={1.7} />
-//             ) : (
-//               <Menu size={23} strokeWidth={1.7} />
-//             )}
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* Mobile Navigation */}
-//       {menuOpen && (
-//         <div className="border-t border-[var(--border)] bg-[var(--background)] md:hidden">
-//           <nav className="mx-auto max-w-7xl px-5 py-5">
-//             <div className="flex flex-col">
-//               {navLinks.map((link) => (
-//                 <Link
-//                   key={link.href}
-//                   href={link.href}
-//                   onClick={() => setMenuOpen(false)}
-//                   className="
-//                     border-b
-//                     border-[var(--border)]
-//                     py-4
-//                     text-sm
-//                     font-medium
-//                     text-[var(--text-primary)]
-//                     hover:text-[var(--primary-hover)]
-//                   "
-//                 >
-//                   {link.label}
-//                 </Link>
-//               ))}
-
-//               {/* Mobile Account */}
-//               <Link
-//                 href="/account"
-//                 onClick={() => setMenuOpen(false)}
-//                 className="
-//                   py-4
-//                   text-sm
-//                   font-medium
-//                   text-[var(--text-primary)]
-//                   hover:text-[var(--primary-hover)]
-//                 "
-//               >
-//                 My Account
-//               </Link>
-//             </div>
-//           </nav>
-//         </div>
-//       )}
-//     </header>
-//   );
-// }
-
-
 "use client";
 
 import { useWishlist } from "@/context/WishlistContext";
@@ -328,13 +55,13 @@ export default function Navbar() {
     getCurrentUser
   } = useAuth();
 
-  useEffect( () => {
-    
-      getCurrentUser();
+  useEffect(() => {
 
-  },[isAuthenticated]);
+    getCurrentUser();
 
- 
+  }, [isAuthenticated]);
+
+
   const handleLogout = async () => {
     setIsLoggingOut(true);
 
@@ -353,46 +80,23 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--background)]">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-8">
 
-        {/* Logo */}
-        {/* <Link
+        <Link
           href="/"
-          className="text-4xl font-extrabold tracking-wide text-[var(--text-primary)] italic shadow-2xl-black text-cyan-900"
-        >
-          A Saddique
-        </Link> */}
-
-        
-{/* <Link
-  href="/"
-  className="group relative inline-flex items-center gap-1 text-3xl sm:text-4xl font-black tracking-tight italic
-  bg-gradient-to-r from-cyan-700 via-cyan-500 to-blue-800
-  bg-clip-text text-transparent
-  transition-all duration-300 hover:scale-105"
->
-  <span>A</span>
-  <span className="font-serif font-bold tracking-wide">
-    Saddique
-  </span>
-  <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-cyan-500 transition-all duration-300 group-hover:w-full"></span>
-</Link> */}
-
-<Link
-  href="/"
-  className="group inline-flex items-center gap-1
-  text-3xl sm:text-4xl font-bold tracking-tight
+          className="group inline-flex items-center gap-1
+  text-xl sm:text-4xl font-bold tracking-tight
   text-[#211A16] transition-all duration-300"
->
-  <span className="font-serif italic text-[#B58A52]">
-    A
-  </span>
-  <span className="font-serif tracking-wide">
-    Saddique
-  </span>
-  <span className="ml-1 text-xs font-medium tracking-[0.2em]
+        >
+          <span className="font-serif italic text-[#B58A52]">
+            A
+          </span>
+          <span className="font-serif tracking-wide">
+            Saddique
+          </span>
+          <span className="ml-1 text-xs font-medium tracking-[0.2em]
   text-[#B58A52] self-end mb-1">
-    ®
-  </span>
-</Link>
+            ®
+          </span>
+        </Link>
 
 
         {/* Desktop Navigation */}
