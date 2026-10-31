@@ -40,6 +40,39 @@ const uploadToCloudinary = async (localFilePath) => {
 };
 
 
+
+const uploadTransactionImageToCloudinary = async (localFilePath) => {
+  if (!localFilePath) return null;
+
+  try {
+    const response = await cloudinary.uploader.upload(
+      localFilePath,
+      {
+        resource_type: "image",
+        folder: "Transaction Image",
+      }
+    );
+
+    return {
+      url: response.secure_url,
+      public_id: response.public_id,
+    };
+  } catch (error) {
+    console.error("Cloudinary upload failed:", error.message);
+    throw error;
+  } finally {
+    // Delete the temporary file after success or failure
+    try {
+      if (fs.existsSync(localFilePath)) {
+        fs.unlinkSync(localFilePath);
+      }
+    } catch (error) {
+      console.error("Temporary file cleanup failed:", error.message);
+    }
+  }
+};
+
+
 export async function deleteFromCloudinary(public_id) {
   if (!public_id) return;
 
@@ -48,5 +81,5 @@ export async function deleteFromCloudinary(public_id) {
   return result;
 }
 
-export { uploadToCloudinary, deleteFromCloudinary };
+export { uploadToCloudinary, deleteFromCloudinary, uploadTransactionImageToCloudinary };
 

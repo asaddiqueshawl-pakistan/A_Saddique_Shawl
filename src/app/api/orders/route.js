@@ -3,7 +3,10 @@ import Product from "@/models/Product";
 import Order from "@/models/Order";
 import { authenticateUser } from "@/middlewares/authenticateUser";
 import User from "@/models/User";
-
+import { uploadTransactionImageToCloudinary } from "@/lib/cloudinary/cloudinary";
+import fs from 'fs';
+import os from 'os';
+import path from 'path'
 
 // get user orderes..
 
@@ -75,13 +78,19 @@ export async function POST(request) {
   try {
     await dbConnect();
 
-    const body = await request.json();
+    // const body = await request.json();
+    const formData = await request.formData();
+    const customer = JSON.parse(formData.get("customer"));
+    const items = JSON.parse(formData.get("items"));
+    const payment = formData.get("payment");
+    const transactionImage = formData.get("transactionImage");
 
-    const {
-      customer,
-      items,
-      paymentMethod = "cod",
-    } = body;
+    // console.log("Customer:", customer);
+    // console.log("Items:", items);
+    // console.log("transactionImage:", transactionImage);
+    // console.log("payment", payment);
+
+     console.log("This order api = ", generateOrderNumber() );
 
     // Validate customer
     if (
@@ -192,6 +201,56 @@ export async function POST(request) {
       });
     }
 
+    const transactionImg = {
+      url: "",
+      public_id: ""
+    }
+
+
+     if (payment !== "Cash On Delivery") {
+      if (
+        !(transactionImage instanceof File) ||
+        transactionImage.size === 0
+      ) {
+        return Response.json(
+          {
+            success: false,
+            message: "Please upload your payment screenshot",
+          },
+          { status: 400 }
+        );
+      }
+
+      const uploadDir = path.join(os.tmpdir(), "uploads");
+      
+          if(!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, {recursive : true})
+          }
+      
+
+
+      const fileName = `${Date.now()}-${transactionImage.name}`;
+
+      console.log("image name = ", fileName);
+
+      const filePath = path.join(uploadDir, fileName);
+
+      const bytes = await transactionImage.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+
+      fs.writeFileSync(filePath, buffer);
+
+      const res = await uploadTransactionImageToCloudinary(filePath);
+
+      transactionImg.url = res.url;
+      transactionImg.public_id = res.public_id;
+
+    }
+
+
+    console.log("order", generateOrderNumber());
+       
+
     const order = await Order.create({
       orderNumber: generateOrderNumber(),
       userEmail: customer.email,
@@ -200,8 +259,13 @@ export async function POST(request) {
       subtotal,
       deliveryFee,
       total,
-      paymentMethod,
+      paymentMethod: payment,
+      transactionId: customer.tansactionId || null,
+      transactionImage: transactionImg || null
     });
+
+
+
 
     return Response.json(
       {

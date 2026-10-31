@@ -14,6 +14,8 @@ export default function CheckoutPage() {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
+    const [payment, setPayment] = useState("Cash On Delivery");
+    const [transactionImage, setTransactionImage] = useState(null);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -21,6 +23,7 @@ export default function CheckoutPage() {
         phone: "",
         address: "",
         city: "",
+        transactionId: "",
     });
 
     const delivery = subtotal > 0 ? 250 : 0;
@@ -47,80 +50,82 @@ export default function CheckoutPage() {
     //     });
     // };
 
+    const paymentMethod = (e) => {
+        setPayment(e);
+        console.log(e)
+
+    }
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         setError("");
         setIsSubmitting(true);
 
+        const orderData = new FormData();
+
+        orderData.append("customer", JSON.stringify(formData));
+        orderData.append("items", JSON.stringify(cart.map((item) => ({
+            productId: item._id,
+            quantity: item.quantity,
+        })),));
+
+        if (transactionImage) {
+            orderData.append("transactionImage", transactionImage);
+        }
+        orderData.append("payment", payment);
+
         try {
             const response = await fetch("/api/orders", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    customer: formData,
-
-                    items: cart.map((item) => ({
-                        productId: item._id,
-                        quantity: item.quantity,
-                    })),
-
-                    paymentMethod: "cod",
-                }),
+                body: orderData,
             });
 
             const data = await response.json();
+          
 
-            if (!response.ok) {
-                throw new Error(
-                    data.message || "Failed to place order"
-                );
-            }
+        console.log("Order created:", data.order);
 
-            console.log("Order created:", data.order);
-
-            router.push(
-                `/order-success?order=${data.order.orderNumber}`
-            );
-        } catch (error) {
-            console.error("Checkout error:", error);
-
-            setError(
-                error.message || "Something went wrong. Please try again."
-            );
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    if (!isLoaded) {
-        return (
-            <main className="flex min-h-screen items-center justify-center bg-[var(--background)]">
-                <p className="text-sm text-[var(--text-secondary)]">
-                    Loading checkout...
-                </p>
-            </main>
+        router.push(
+            `/order-success?order=${data.order.orderNumber}`
         );
+    } catch (error) {
+        console.error("Checkout error:", error);
+
+        setError(
+            error.message || "Something went wrong. Please try again."
+        );
+    } finally {
+        setIsSubmitting(false);
     }
+};
 
-    if (cart.length === 0) {
-        return (
-            <main className="flex min-h-screen items-center justify-center bg-[var(--background)] px-5">
-                <div className="text-center">
+if (!isLoaded) {
+    return (
+        <main className="flex min-h-screen items-center justify-center bg-[var(--background)]">
+            <p className="text-sm text-[var(--text-secondary)]">
+                Loading checkout...
+            </p>
+        </main>
+    );
+}
 
-                    <h1 className="text-2xl font-semibold text-[var(--text-primary)]">
-                        Your cart is empty
-                    </h1>
+if (cart.length === 0) {
+    return (
+        <main className="flex min-h-screen items-center justify-center bg-[var(--background)] px-5">
+            <div className="text-center">
 
-                    <p className="mt-2 text-sm text-[var(--text-secondary)]">
-                        Add a watch before proceeding to checkout.
-                    </p>
+                <h1 className="text-2xl font-semibold text-[var(--text-primary)]">
+                    Your cart is empty
+                </h1>
 
-                    <Link
-                        href="/shop"
-                        className="
+                <p className="mt-2 text-sm text-[var(--text-secondary)]">
+                    Add a watch before proceeding to checkout.
+                </p>
+
+                <Link
+                    href="/shop"
+                    className="
               mt-6
               inline-flex
               bg-[var(--primary)]
@@ -132,25 +137,25 @@ export default function CheckoutPage() {
               transition
               hover:bg-[var(--primary-hover)]
             "
-                    >
-                        Go to Shop
-                    </Link>
+                >
+                    Go to Shop
+                </Link>
 
-                </div>
-            </main>
-        );
-    }
+            </div>
+        </main>
+    );
+}
 
-    return (
-        <main className="min-h-screen bg-[var(--background)]">
+return (
+    <main className="min-h-screen bg-[var(--background)]">
 
-            {/* Header */}
-            <section className="border-b border-[var(--border)] bg-[var(--section-bg)]">
-                <div className="mx-auto max-w-7xl px-5 py-12 lg:px-8">
+        {/* Header */}
+        <section className="border-b border-[var(--border)] bg-[var(--section-bg)]">
+            <div className="mx-auto max-w-7xl px-5 py-12 lg:px-8">
 
-                    <Link
-                        href="/cart"
-                        className="
+                <Link
+                    href="/cart"
+                    className="
               inline-flex
               items-center
               gap-2
@@ -159,66 +164,66 @@ export default function CheckoutPage() {
               transition
               hover:text-[var(--text-primary)]
             "
-                    >
-                        <ArrowLeft size={16} />
-                        Back to Cart
-                    </Link>
+                >
+                    <ArrowLeft size={16} />
+                    Back to Cart
+                </Link>
 
-                    <h1 className="mt-6 text-4xl font-semibold tracking-tight text-[var(--text-primary)]">
-                        Checkout
-                    </h1>
+                <h1 className="mt-6 text-4xl font-semibold tracking-tight text-[var(--text-primary)]">
+                    Checkout
+                </h1>
 
-                </div>
-            </section>
+            </div>
+        </section>
 
-            {/* Checkout */}
-            <section>
-                <div className="mx-auto max-w-7xl px-5 py-12 lg:px-8">
+        {/* Checkout */}
+        <section>
+            <div className="mx-auto max-w-7xl px-5 py-12 lg:px-8">
 
-                    {error && (
-                        <div className="mb-6 border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-                            {error}
-                        </div>
-                    )}
+                {error && (
+                    <div className="mb-6 border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                        {error}
+                    </div>
+                )}
 
-                    <form
-                        onSubmit={handleSubmit}
-                        className="grid gap-10 lg:grid-cols-[1fr_380px]"
-                    >
+                <form
+                    onSubmit={handleSubmit}
+                    className="grid gap-10 lg:grid-cols-[1fr_380px]"
+                >
 
-                        {/* Customer Information */}
-                        <div>
+                    {/* Customer Information */}
+                    <div>
 
-                            <div className="border border-[var(--border)] p-6 sm:p-8">
+                        <div className="border border-[var(--border)] p-6 sm:p-8">
 
-                                <h2 className="text-xl font-semibold text-[var(--text-primary)]">
-                                    Delivery Information
-                                </h2>
+                            <h2 className="text-xl font-semibold text-[var(--text-primary)]">
+                                Delivery Information
+                            </h2>
 
-                                <p className="mt-2 text-sm text-[var(--text-secondary)]">
-                                    Enter the details where you'd like your order delivered.
-                                </p>
+                            <p className="mt-2 text-sm text-[var(--text-secondary)]">
+                                Enter the details where you'd like your order delivered.
+                            </p>
 
-                                <div className="mt-7 grid gap-5 sm:grid-cols-2">
+                            <div className="mt-7 grid gap-5 sm:grid-cols-2">
 
-                                    {/* Name */}
-                                    <div className="sm:col-span-2">
-                                        <label
-                                            htmlFor="name"
-                                            className="mb-2 block text-sm font-medium text-[var(--text-primary)]"
-                                        >
-                                            Full Name
-                                        </label>
+                                {/* Name */}
+                                <div className="sm:col-span-2">
+                                    <label
+                                        htmlFor="name"
+                                        className="mb-2 block text-sm font-medium text-[var(--text-primary)]"
+                                    >
+                                        Full Name
+                                    </label>
 
-                                        <input
-                                            id="name"
-                                            name="name"
-                                            type="text"
-                                            required
-                                            value={formData.name}
-                                            onChange={handleChange}
-                                            placeholder="Muhammad Bilal"
-                                            className="
+                                    <input
+                                        id="name"
+                                        name="name"
+                                        type="text"
+                                        required
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        placeholder="Muhammad Bilal"
+                                        className="
                         h-12
                         w-full
                         border
@@ -231,27 +236,27 @@ export default function CheckoutPage() {
                         placeholder:text-gray-400
                         focus:border-[var(--primary)]
                       "
-                                        />
-                                    </div>
+                                    />
+                                </div>
 
-                                    {/* Email */}
-                                    <div>
-                                        <label
-                                            htmlFor="email"
-                                            className="mb-2 block text-sm font-medium text-[var(--text-primary)]"
-                                        >
-                                            Email Address
-                                        </label>
+                                {/* Email */}
+                                <div>
+                                    <label
+                                        htmlFor="email"
+                                        className="mb-2 block text-sm font-medium text-[var(--text-primary)]"
+                                    >
+                                        Email Address
+                                    </label>
 
-                                        <input
-                                            id="email"
-                                            name="email"
-                                            type="email"
-                                            required
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                            placeholder="you@example.com"
-                                            className="
+                                    <input
+                                        id="email"
+                                        name="email"
+                                        type="email"
+                                        required
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        placeholder="you@example.com"
+                                        className="
                         h-12
                         w-full
                         border
@@ -264,27 +269,27 @@ export default function CheckoutPage() {
                         placeholder:text-gray-400
                         focus:border-[var(--primary)]
                       "
-                                        />
-                                    </div>
+                                    />
+                                </div>
 
-                                    {/* Phone */}
-                                    <div>
-                                        <label
-                                            htmlFor="phone"
-                                            className="mb-2 block text-sm font-medium text-[var(--text-primary)]"
-                                        >
-                                            Phone Number
-                                        </label>
+                                {/* Phone */}
+                                <div>
+                                    <label
+                                        htmlFor="phone"
+                                        className="mb-2 block text-sm font-medium text-[var(--text-primary)]"
+                                    >
+                                        Phone Number
+                                    </label>
 
-                                        <input
-                                            id="phone"
-                                            name="phone"
-                                            type="tel"
-                                            required
-                                            value={formData.phone}
-                                            onChange={handleChange}
-                                            placeholder="03XX XXXXXXX"
-                                            className="
+                                    <input
+                                        id="phone"
+                                        name="phone"
+                                        type="tel"
+                                        required
+                                        value={formData.phone}
+                                        onChange={handleChange}
+                                        placeholder="03XX XXXXXXX"
+                                        className="
                         h-12
                         w-full
                         border
@@ -297,27 +302,27 @@ export default function CheckoutPage() {
                         placeholder:text-gray-400
                         focus:border-[var(--primary)]
                       "
-                                        />
-                                    </div>
+                                    />
+                                </div>
 
-                                    {/* Address */}
-                                    <div className="sm:col-span-2">
-                                        <label
-                                            htmlFor="address"
-                                            className="mb-2 block text-sm font-medium text-[var(--text-primary)]"
-                                        >
-                                            Complete Address
-                                        </label>
+                                {/* Address */}
+                                <div className="sm:col-span-2">
+                                    <label
+                                        htmlFor="address"
+                                        className="mb-2 block text-sm font-medium text-[var(--text-primary)]"
+                                    >
+                                        Complete Address
+                                    </label>
 
-                                        <textarea
-                                            id="address"
-                                            name="address"
-                                            required
-                                            value={formData.address}
-                                            onChange={handleChange}
-                                            rows={4}
-                                            placeholder="House number, street, area..."
-                                            className="
+                                    <textarea
+                                        id="address"
+                                        name="address"
+                                        required
+                                        value={formData.address}
+                                        onChange={handleChange}
+                                        rows={4}
+                                        placeholder="House number, street, area..."
+                                        className="
                         w-full
                         resize-none
                         border
@@ -331,27 +336,27 @@ export default function CheckoutPage() {
                         placeholder:text-gray-400
                         focus:border-[var(--primary)]
                       "
-                                        />
-                                    </div>
+                                    />
+                                </div>
 
-                                    {/* City */}
-                                    <div>
-                                        <label
-                                            htmlFor="city"
-                                            className="mb-2 block text-sm font-medium text-[var(--text-primary)]"
-                                        >
-                                            City
-                                        </label>
+                                {/* City */}
+                                <div>
+                                    <label
+                                        htmlFor="city"
+                                        className="mb-2 block text-sm font-medium text-[var(--text-primary)]"
+                                    >
+                                        City
+                                    </label>
 
-                                        <input
-                                            id="city"
-                                            name="city"
-                                            type="text"
-                                            required
-                                            value={formData.city}
-                                            onChange={handleChange}
-                                            placeholder="Lahore"
-                                            className="
+                                    <input
+                                        id="city"
+                                        name="city"
+                                        type="text"
+                                        required
+                                        value={formData.city}
+                                        onChange={handleChange}
+                                        placeholder="Lahore"
+                                        className="
                         h-12
                         w-full
                         border
@@ -364,21 +369,21 @@ export default function CheckoutPage() {
                         placeholder:text-gray-400
                         focus:border-[var(--primary)]
                       "
-                                        />
-                                    </div>
-
+                                    />
                                 </div>
 
                             </div>
 
-                            {/* Payment */}
-                            <div className="mt-6 border border-[var(--border)] p-6 sm:p-8">
+                        </div>
 
-                                <h2 className="text-xl font-semibold text-[var(--text-primary)]">
-                                    Payment Method
-                                </h2>
+                        {/* Payment */}
+                        <div className="mt-6 border border-[var(--border)] p-6 sm:p-8">
 
-                                <div className="mt-6 border border-[var(--primary)] bg-[#fffdf5] p-5">
+                            <h2 className="text-xl font-semibold text-[var(--text-primary)]">
+                                Payment Method
+                            </h2>
+
+                            {/* <div className="mt-6 border border-[var(--primary)] bg-[#fffdf5] p-5">
 
                                     <div className="flex items-start gap-3">
 
@@ -386,9 +391,10 @@ export default function CheckoutPage() {
                                             id="cod"
                                             type="radio"
                                             name="payment"
-                                            value="cod"
+                                            value="Cash On Delivery"
                                             defaultChecked
                                             className="mt-1 accent-[var(--primary)]"
+                                            onClick={(e) => (paymentMethod(e.target.value))}
                                         />
 
                                         <label htmlFor="cod">
@@ -403,12 +409,11 @@ export default function CheckoutPage() {
 
                                     </div>
                                     <div className="flex items-start gap-3">
-
                                         <input
                                             id="cod"
                                             type="radio"
                                             name="payment"
-                                            value="cod"
+                                            value="Easypaisa"
                                             defaultChecked
                                             className="mt-1 accent-[var(--primary)]"
                                         />
@@ -425,7 +430,6 @@ export default function CheckoutPage() {
 
                                     </div>
                                     <div className="flex items-start gap-3">
-
                                         <input
                                             id="cod"
                                             type="radio"
@@ -468,100 +472,162 @@ export default function CheckoutPage() {
                                         </label>
 
                                     </div>
-                                </div>
+                                </div> */}
 
+                            <div className="my-5">
+                                <select
+                                    className="border p-2 outline-0 w-full"
+                                    value={payment}
+                                    onChange={(e) => paymentMethod(e.target.value)}
+                                >
+                                    <option value="Cash On Delivery">Cash On Delivery</option>
+                                    <option value="EasyPaisa">EasyPaisa</option>
+                                    <option value="JazzCash">JazzCash</option>
+                                    <option value="Bank Transfer">Bank Transfer</option>
+                                </select>
+                            </div>
+
+                            {payment !== "Cash On Delivery" && (
+                                <div className="border p-4 my-3 space-y-3">
+                                    {/* Transaction ID */}
+                                    <div>
+                                        <label htmlFor="transactionID" className="block mb-2">
+                                            Transaction ID
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            id="transactionID"
+                                            name="transactionId"
+                                            value={formData.transactionId}
+                                            onChange={handleChange}
+                                            placeholder="Enter transaction ID"
+                                            required
+                                            className="p-2 border w-full outline-0"
+                                        />
+                                    </div>
+
+                                    {/* Transaction Screenshot */}
+                                    <div>
+                                        <label htmlFor="transactionImage" className="block mb-2">
+                                            Upload Payment Screenshot
+                                        </label>
+
+                                        <input
+                                            type="file"
+                                            id="transactionImage"
+                                            name="transactionImage"
+                                            accept="image/*"
+                                            onChange={(e) =>
+                                                setTransactionImage(e.target.files?.[0] || null)
+                                            }
+                                            required
+                                            className="p-2 border w-full"
+                                        />
+                                    </div>
+                                    {transactionImage && (
+                                        <div className="mt-4">
+                                            <img
+                                                src={URL.createObjectURL(transactionImage)}
+                                                alt="Transaction screenshot preview"
+                                                className="w-64 h-auto rounded-lg border"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+
+                    </div>
+
+                    {/* Order Summary */}
+                    <aside className="h-fit border border-[var(--border)] p-6 lg:p-7">
+
+                        <h2 className="text-lg font-semibold text-[var(--text-primary)]">
+                            Your Order
+                        </h2>
+
+                        <div className="mt-6 space-y-5">
+
+                            {cart.map((item) => {
+                                const price = item.discountPrice || item.price;
+
+                                return (
+                                    <div
+                                        key={item._id}
+                                        className="flex gap-4"
+                                    >
+                                        <div className="relative h-20 w-16 shrink-0 overflow-hidden bg-[var(--section-bg)]">
+                                            {item.image && (
+                                                <Image
+                                                    src={item.image}
+                                                    alt={item.name}
+                                                    fill
+                                                    className="object-cover"
+                                                    sizes="64px"
+                                                />
+                                            )}
+                                        </div>
+
+                                        <div className="min-w-0 flex-1">
+                                            <p className="text-sm font-medium text-[var(--text-primary)]">
+                                                {item.name}
+                                            </p>
+
+                                            <p className="mt-1 text-xs text-[var(--text-secondary)]">
+                                                Qty: {item.quantity}
+                                            </p>
+                                        </div>
+
+                                        <p className="text-sm font-medium text-[var(--text-primary)]">
+                                            Rs. {(price * item.quantity).toLocaleString()}
+                                        </p>
+                                    </div>
+                                );
+                            })}
+
+                        </div>
+
+                        <div className="mt-7 space-y-4 border-t border-[var(--border)] pt-6">
+
+                            <div className="flex justify-between text-sm">
+                                <span className="text-[var(--text-secondary)]">
+                                    Subtotal
+                                </span>
+
+                                <span className="font-medium text-[var(--text-primary)]">
+                                    Rs. {subtotal.toLocaleString()}
+                                </span>
+                            </div>
+
+                            <div className="flex justify-between text-sm">
+                                <span className="text-[var(--text-secondary)]">
+                                    Delivery
+                                </span>
+
+                                <span className="font-medium text-[var(--text-primary)]">
+                                    Rs. {delivery.toLocaleString()}
+                                </span>
                             </div>
 
                         </div>
 
-                        {/* Order Summary */}
-                        <aside className="h-fit border border-[var(--border)] p-6 lg:p-7">
+                        <div className="mt-5 flex items-center justify-between border-t border-[var(--border)] pt-5">
 
-                            <h2 className="text-lg font-semibold text-[var(--text-primary)]">
-                                Your Order
-                            </h2>
+                            <span className="font-semibold text-[var(--text-primary)]">
+                                Total
+                            </span>
 
-                            <div className="mt-6 space-y-5">
+                            <span className="text-xl font-semibold text-[var(--text-primary)]">
+                                Rs. {total.toLocaleString()}
+                            </span>
 
-                                {cart.map((item) => {
-                                    const price = item.discountPrice || item.price;
+                        </div>
 
-                                    return (
-                                        <div
-                                            key={item._id}
-                                            className="flex gap-4"
-                                        >
-                                            <div className="relative h-20 w-16 shrink-0 overflow-hidden bg-[var(--section-bg)]">
-                                                {item.image && (
-                                                    <Image
-                                                        src={item.image}
-                                                        alt={item.name}
-                                                        fill
-                                                        className="object-cover"
-                                                        sizes="64px"
-                                                    />
-                                                )}
-                                            </div>
-
-                                            <div className="min-w-0 flex-1">
-                                                <p className="text-sm font-medium text-[var(--text-primary)]">
-                                                    {item.name}
-                                                </p>
-
-                                                <p className="mt-1 text-xs text-[var(--text-secondary)]">
-                                                    Qty: {item.quantity}
-                                                </p>
-                                            </div>
-
-                                            <p className="text-sm font-medium text-[var(--text-primary)]">
-                                                Rs. {(price * item.quantity).toLocaleString()}
-                                            </p>
-                                        </div>
-                                    );
-                                })}
-
-                            </div>
-
-                            <div className="mt-7 space-y-4 border-t border-[var(--border)] pt-6">
-
-                                <div className="flex justify-between text-sm">
-                                    <span className="text-[var(--text-secondary)]">
-                                        Subtotal
-                                    </span>
-
-                                    <span className="font-medium text-[var(--text-primary)]">
-                                        Rs. {subtotal.toLocaleString()}
-                                    </span>
-                                </div>
-
-                                <div className="flex justify-between text-sm">
-                                    <span className="text-[var(--text-secondary)]">
-                                        Delivery
-                                    </span>
-
-                                    <span className="font-medium text-[var(--text-primary)]">
-                                        Rs. {delivery.toLocaleString()}
-                                    </span>
-                                </div>
-
-                            </div>
-
-                            <div className="mt-5 flex items-center justify-between border-t border-[var(--border)] pt-5">
-
-                                <span className="font-semibold text-[var(--text-primary)]">
-                                    Total
-                                </span>
-
-                                <span className="text-xl font-semibold text-[var(--text-primary)]">
-                                    Rs. {total.toLocaleString()}
-                                </span>
-
-                            </div>
-
-                            <button
-                                type="submit"
-                                disabled={isSubmitting}
-                                className="
+                        <button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="
                   mt-7
                   flex
                   w-full
@@ -577,22 +643,22 @@ export default function CheckoutPage() {
                   transition
                   hover:bg-[var(--primary-hover)]
                 "
-                            >
-                                <LockKeyhole size={17} />
-                                {isSubmitting ? "Placing Order..." : "Place Order"}
-                            </button>
+                        >
+                            <LockKeyhole size={17} />
+                            {isSubmitting ? "Placing Order..." : "Place Order"}
+                        </button>
 
-                            <p className="mt-4 text-center text-xs leading-5 text-[var(--text-secondary)]">
-                                By placing your order, you agree to our terms and conditions.
-                            </p>
+                        <p className="mt-4 text-center text-xs leading-5 text-[var(--text-secondary)]">
+                            By placing your order, you agree to our terms and conditions.
+                        </p>
 
-                        </aside>
+                    </aside>
 
-                    </form>
+                </form>
 
-                </div>
-            </section>
+            </div>
+        </section>
 
-        </main>
-    );
+    </main>
+);
 }

@@ -46,7 +46,7 @@ const orderSchema = new mongoose.Schema(
       unique: true,
     },
 
-     userEmail: {
+    userEmail: {
       type: String,
       required: true,
     },
@@ -112,11 +112,11 @@ const orderSchema = new mongoose.Schema(
       min: 0,
     },
 
-    paymentMethod: {
-      type: String,
-      enum: ["cod"],
-      default: "cod",
-    },
+    // paymentMethod: {
+    //   type: String,
+    //   // enum: ["cod"],
+    //   // default: "cod",
+    // },
 
     paymentStatus: {
       type: String,
@@ -135,6 +135,34 @@ const orderSchema = new mongoose.Schema(
         "cancelled",
       ],
       default: "pending",
+    },
+
+    paymentMethod: {
+      type: String,
+      enum: [
+        "Cash On Delivery",
+        "EasyPaisa",
+        "JazzCash",
+        "Bank Transfer",
+      ],
+      required: true,
+      default: "Cash On Delivery",
+    },
+
+    transactionId: {
+      type: String,
+      default: "",
+    },
+
+    transactionImage: {
+      url: {
+        type: String,
+        default: "",
+      },
+      public_id: {
+        type: String,
+        default: "",
+      },
     },
   },
   {
