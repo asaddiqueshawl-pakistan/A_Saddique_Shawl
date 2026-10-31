@@ -1,13 +1,32 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export default function Hero() {
+
+  const [image, setImage] = useState(0)
+
+  const images = [
+    "a_saddique.jpg",
+    "1.jpg",
+    "2.png",
+    "3.jpg"
+  ]
+
+ useEffect(() => {
+    const interval = setInterval(() => {
+      setImage((prev) => (prev + 1) % images.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+  
   return (
     <section className="relative overflow-hidden bg-[var(--background)]">
       <div className="relative sm:h-[85vh] h-[30vh] w-[100vw]">
         <Image
-          src="/banners/a_saddique.jpg"
+          src={`/banners/${images[image]}`}
           alt="Image"
           fill
           className="object-fit"

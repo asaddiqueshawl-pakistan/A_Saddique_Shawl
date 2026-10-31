@@ -354,12 +354,46 @@ export default function Navbar() {
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-8">
 
         {/* Logo */}
-        <Link
+        {/* <Link
           href="/"
-          className="text-xl font-bold tracking-[0.25em] text-[var(--text-primary)]"
+          className="text-4xl font-extrabold tracking-wide text-[var(--text-primary)] italic shadow-2xl-black text-cyan-900"
         >
           A Saddique
-        </Link>
+        </Link> */}
+
+        
+{/* <Link
+  href="/"
+  className="group relative inline-flex items-center gap-1 text-3xl sm:text-4xl font-black tracking-tight italic
+  bg-gradient-to-r from-cyan-700 via-cyan-500 to-blue-800
+  bg-clip-text text-transparent
+  transition-all duration-300 hover:scale-105"
+>
+  <span>A</span>
+  <span className="font-serif font-bold tracking-wide">
+    Saddique
+  </span>
+  <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-cyan-500 transition-all duration-300 group-hover:w-full"></span>
+</Link> */}
+
+<Link
+  href="/"
+  className="group inline-flex items-center gap-1
+  text-3xl sm:text-4xl font-bold tracking-tight
+  text-[#211A16] transition-all duration-300"
+>
+  <span className="font-serif italic text-[#B58A52]">
+    A
+  </span>
+  <span className="font-serif tracking-wide">
+    Saddique
+  </span>
+  <span className="ml-1 text-xs font-medium tracking-[0.2em]
+  text-[#B58A52] self-end mb-1">
+    ®
+  </span>
+</Link>
+
 
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-8 md:flex">
