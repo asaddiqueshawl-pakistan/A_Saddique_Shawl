@@ -81,31 +81,32 @@ function ShopContent() {
     <main className="min-h-screen bg-[var(--background)]">
       {/* <Navbar /> */}
 
-      <section className="border-b border-[var(--border)] bg-[var(--section-bg)]">
-        <div className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
-          <p className="text-sm font-medium uppercase tracking-[0.25em] text-[var(--primary-hover)]">
+      {/* <section className="border-b border-[var(--border)] bg-[var(--section-bg)]"> */}
+        {/* <div className="mx-auto max-w-7xl px-5 py-16 lg:px-8"> */}
+          {/* <p className="text-sm font-medium uppercase tracking-[0.25em] text-[var(--primary-hover)]">
             Our Collection
-          </p>
+          </p> */}
 
-          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--text-primary)] sm:text-5xl">
-            Shawls
-          </h1>
+          {/* <h1 className="mt-3 text-2xl font-semibold tracking-tight text-[var(--text-primary)] sm:text-3xl">
+           Our Collection 
+          </h1> */}
 
+           {/*
           <p className="mt-4 max-w-xl text-sm leading-7 text-[var(--text-secondary)] sm:text-base">
             Discover beautiful Kashmiri and Pashmina shawls,
             carefully selected for warmth, elegance, and timeless style.
-          </p>
-        </div>
-      </section>
+          </p> */}
+        {/* </div> */}
+      {/* </section> */}
 
       <section>
         <div className="mx-auto max-w-7xl px-5 py-12 lg:px-8">
           <div className="mb-8 flex flex-col gap-4 border-b border-[var(--border)] pb-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-[var(--text-primary)]">
+              <h2 className="text-xl text-[var(--text-primary)]">
                 {searchParams
                   ? `${searchParams.charAt(0).toUpperCase()}${searchParams.slice(1)} Shawls`
-                  : "All Shawls"}
+                  : "All Shawls Collection"}
               </h2>
 
               <p className="mt-1 text-sm text-[var(--text-secondary)]">
