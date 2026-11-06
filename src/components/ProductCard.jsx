@@ -8,7 +8,7 @@ export default function ProductCard({ product }) {
     <article className="group">
 
       {/* Product Image */}
-      <div className="relative aspect-[4/5] overflow-hidden border border-[var(--border)] bg-[var(--section-bg)]">
+      <div className="relative aspect-[4/5] rounded-md overflow-hidden border  border-[var(--border)] bg-[var(--section-bg)]">
 
         {/* <Link href={`/product/${product.slug}`} className="block h-full">
           <Image
