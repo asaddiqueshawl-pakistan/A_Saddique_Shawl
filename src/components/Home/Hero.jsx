@@ -32,7 +32,7 @@ export default function Hero() {
             alt="A Saddique Banner"
             fill
             priority={index === 0}
-            className={`object-contain transition-opacity duration-1000 ease-in-out ${
+            className={`object-fit transition-opacity duration-1000 ease-in-out ${
               image === index ? "opacity-100" : "opacity-0"
             }`}
           />
